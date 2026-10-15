@@ -1,0 +1,532 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090710">
+<title>VYRO — Your Life, Evolved</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#090710;--panel:#12101d;--panel2:#191527;
+  --line:rgba(255,255,255,.08);--text:#f7f4ff;
+  --muted:#9690ac;--purple:#a78bfa;--violet:#8055ef;
+  --mint:#a7f3d0;--pink:#f0abfc;--radius:22px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:'DM Sans',sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{
+outline:2px solid var(--purple);outline-offset:3px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;flex-shrink:0;padding:28px 18px;
+border-right:1px solid var(--line);background:#0c0a14;
+position:fixed;inset:0 auto 0 0;overflow-y:auto;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px 34px}
+.brand-icon{width:42px;height:42px;border-radius:15px;
+background:linear-gradient(145deg,#c4b5fd,#7c3aed);
+display:grid;place-items:center;color:#fff;font-weight:800;
+font-size:22px;box-shadow:0 0 28px #8b5cf64a}
+.brand-name{font:800 21px Manrope;letter-spacing:3px}
+.brand-sub{color:var(--muted);font-size:10px;letter-spacing:2px}
+.nav-label{font-size:10px;color:#716a87;letter-spacing:2px;
+padding:12px 12px 10px}
+.nav{display:flex;align-items:center;gap:12px;width:100%;
+border:1px solid transparent;border-radius:13px;padding:12px;
+margin:3px 0;background:transparent;color:#a9a2bd;text-align:left;
+transition:.2s}
+.nav:hover{background:#ffffff08;color:white}
+.nav.active{background:linear-gradient(100deg,#8b5cf626,#8b5cf608);
+border-color:#a78bfa2d;color:#d6c8ff}
+.nav .ico{width:21px;text-align:center;font-size:17px}
+.side-bottom{margin-top:30px;padding:16px;border:1px solid var(--line);
+border-radius:18px;background:linear-gradient(145deg,#211634,#100e19)}
+.side-bottom p{font-size:12px;color:var(--muted);line-height:1.6}
+.plus-mini{color:#d8c9ff;font-size:11px;letter-spacing:1px}
+.main{margin-left:245px;width:calc(100% - 245px);min-width:0}
+.topbar{height:78px;border-bottom:1px solid var(--line);
+display:flex;align-items:center;justify-content:space-between;
+padding:0 36px;position:sticky;top:0;background:#090710dd;
+backdrop-filter:blur(20px);z-index:5}
+.top-left{display:flex;align-items:center;gap:12px}
+.page-caption{font-size:12px;color:var(--muted)}
+.avatar{width:38px;height:38px;border-radius:14px;
+display:grid;place-items:center;background:#241a38;
+border:1px solid #9b80ff44;color:#dacbff;font-weight:700}
+.content{max-width:1250px;margin:auto;padding:34px 36px 70px}
+.page{display:none;animation:appear .35s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}
+to{opacity:1;transform:translateY(0)}}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:Manrope,sans-serif}
+h1{font-size:clamp(27px,4vw,42px);letter-spacing:-1.8px;margin-bottom:10px}
+h2{font-size:21px;letter-spacing:-.5px}
+h3{font-size:15px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.eyebrow{color:#bda9ff;font-size:10px;font-weight:700;
+letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.hero{position:relative;overflow:hidden;border:1px solid #a78bfa26;
+border-radius:28px;padding:34px;
+background:radial-gradient(ellipse at 90% 10%,#8b5cf62e,transparent 40%),
+radial-gradient(ellipse at 65% 110%,#4c1d9540,transparent 42%),
+linear-gradient(125deg,#191328,#100d1b 65%,#171026);
+min-height:245px}
+.hero:after{content:"";position:absolute;right:-55px;top:-120px;
+width:320px;height:320px;border:1px solid #c4b5fd20;
+border-radius:50%;box-shadow:0 0 0 32px #c4b5fd06,0 0 0 64px #c4b5fd05}
+.hero-inner{position:relative;z-index:1;max-width:620px}
+.hero h1{max-width:550px}
+.hero p{color:#b8afce;line-height:1.7;max-width:480px;font-size:14px}
+.btn{border:1px solid var(--line);border-radius:12px;padding:11px 16px;
+background:#ffffff08;color:var(--text);font-weight:600;font-size:12px;
+transition:.2s}
+.btn:hover{transform:translateY(-1px);background:#ffffff12}
+.btn.primary{background:linear-gradient(110deg,#9b7afa,#7746df);
+border-color:transparent;box-shadow:0 7px 24px #8055ef30;color:white}
+.btn.soft{color:#d7c7ff;border-color:#a78bfa38;background:#a78bfa12}
+.btn.danger{color:#fda4af;border-color:#fb71852a}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.grid{display:grid;gap:16px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.section-head{display:flex;justify-content:space-between;align-items:center;
+gap:14px;margin:30px 0 15px}
+.card{background:linear-gradient(145deg,#151221,#100e19);
+border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+min-width:0}
+.card-title{display:flex;align-items:center;justify-content:space-between;
+gap:12px;margin-bottom:16px}
+.card-title h2,.card-title h3{margin:0}
+.metric{font:800 29px Manrope;letter-spacing:-1px;margin:12px 0 5px}
+.metric-label{font-size:12px;color:var(--muted)}
+.stat-icon{width:40px;height:40px;border-radius:13px;display:grid;
+place-items:center;background:#a78bfa15;color:#c4b5fd;font-size:18px}
+.tag{display:inline-flex;align-items:center;border-radius:20px;
+padding:6px 10px;background:#a78bfa14;color:#cbbaff;font-size:10px;
+border:1px solid #a78bfa22}
+.progress{height:6px;background:#ffffff0c;border-radius:20px;
+overflow:hidden;margin:13px 0}
+.progress span{display:block;height:100%;border-radius:20px;
+background:linear-gradient(90deg,#8b5cf6,#d8b4fe);transition:width .3s}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.divider{height:1px;background:var(--line);margin:17px 0}
+.activity{display:flex;align-items:center;gap:12px;padding:13px 0;
+border-bottom:1px solid var(--line)}
+.activity:last-child{border-bottom:0}
+.activity-icon{width:39px;height:39px;display:grid;place-items:center;
+border-radius:13px;background:#a78bfa13;flex-shrink:0}
+.activity-info{flex:1;min-width:0}
+.activity-info strong{font-size:13px;display:block}
+.activity-info small{font-size:11px;color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;color:#b9b0cc}
+.field input,.field textarea,.field select,.search{
+width:100%;background:#0c0a14;border:1px solid #ffffff12;
+border-radius:12px;color:var(--text);padding:12px;min-width:0}
+.field textarea{resize:vertical;min-height:130px;line-height:1.7}
+.field select option{background:#12101d}
+.field input::placeholder,.field textarea::placeholder{color:#665f78}
+.journal-paper{background:radial-gradient(ellipse at 100% 0%,#8b5cf61a,transparent 45%),#11101b}
+.entry-card{cursor:pointer;transition:.2s}
+.entry-card:hover{border-color:#a78bfa55;transform:translateY(-2px)}
+.entry-preview{white-space:pre-wrap;line-height:1.7;color:#a9a1bd;
+font-size:12px;overflow-wrap:anywhere}
+.mood{font-size:22px}
+.mood-option{border:1px solid var(--line);background:#ffffff05;
+border-radius:12px;padding:11px;color:var(--text)}
+.mood-option.selected{border-color:var(--purple);background:#a78bfa20}
+.chart{height:150px;display:flex;align-items:end;gap:10px;padding-top:15px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;
+gap:8px;height:100%;justify-content:end}
+.bar{width:100%;max-width:30px;min-height:4px;border-radius:7px 7px 3px 3px;
+background:linear-gradient(180deg,#c4b5fd,#7c3aed);transition:height .4s}
+.bar-label{font-size:10px;color:var(--muted)}
+.circle{width:120px;height:120px;border-radius:50%;display:grid;
+place-items:center;position:relative;background:conic-gradient(#a78bfa 0deg,#a78bfa var(--deg,0deg),#ffffff0d var(--deg,0deg))}
+.circle:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#13101e}
+.circle-inner{position:relative;text-align:center}
+.circle-inner strong{font:800 24px Manrope;display:block}
+.circle-inner small{font-size:10px;color:var(--muted)}
+.feature-icon{width:44px;height:44px;border-radius:15px;
+display:grid;place-items:center;background:#a78bfa15;font-size:20px;margin-bottom:18px}
+.plus-hero{background:radial-gradient(ellipse at 85% 10%,#a78bfa36,transparent 40%),linear-gradient(140deg,#25143b,#110d1d 70%);border-color:#a78bfa40}
+.check{color:#c4b5fd;margin-right:7px}
+.empty{text-align:center;padding:36px 15px;color:var(--muted)}
+.empty .big{font-size:30px;margin-bottom:12px}
+.bottom-nav{display:none}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);
+opacity:0;pointer-events:none;background:#211832;border:1px solid #a78bfa44;
+padding:12px 18px;border-radius:13px;font-size:12px;z-index:50;
+transition:.25s;box-shadow:0 10px 35px #0008}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#000a;
+backdrop-filter:blur(8px);z-index:30;align-items:center;justify-content:center;padding:18px}
+.modal-backdrop.show{display:flex}
+.modal{width:min(500px,100%);max-height:90vh;overflow:auto;
+background:#151221;border:1px solid var(--line);border-radius:22px;padding:24px}
+@media(max-width:1050px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:28px 24px}}
+@media(max-width:760px){
+.sidebar{display:none}.main{margin:0;width:100%}
+.topbar{height:65px;padding:0 18px}.content{padding:22px 16px 100px}
+.hero{padding:25px 21px;min-height:230px}.grid.two,.grid.three{grid-template-columns:1fr}
+.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{padding:18px}.metric{font-size:25px}.section-head{margin-top:24px}
+.bottom-nav{display:flex;position:fixed;z-index:20;bottom:0;left:0;right:0;
+padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+background:#100d19ed;backdrop-filter:blur(20px);border-top:1px solid var(--line);
+justify-content:space-around}
+.bottom-nav button{background:transparent;border:0;color:#8f87a6;
+display:flex;flex-direction:column;align-items:center;gap:5px;
+font-size:9px;padding:5px 8px;min-width:0}
+.bottom-nav button span:first-child{font-size:18px}
+.bottom-nav button.active{color:#c4b5fd}
+.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+.top-caption{display:none}
+}
+@media(max-width:380px){.grid.four{grid-template-columns:1fr}.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">V</div>
+    <div><div class="brand-name">VYRO</div><div class="brand-sub">YOUR LIFE, EVOLVED</div></div>
+  </div>
+  <div class="nav-label">YOUR SPACE</div>
+  <button class="nav active" data-page="home"><span class="ico">◈</span> Overview</button>
+  <button class="nav" data-page="routine"><span class="ico">◷</span> Daily routine</button>
+  <button class="nav" data-page="fitness"><span class="ico">↗</span> Fitness & health</button>
+  <button class="nav" data-page="journal"><span class="ico">▤</span> My journal</button>
+  <button class="nav" data-page="insights"><span class="ico">⌁</span> Insights</button>
+  <div class="nav-label">PERSONAL</div>
+  <button class="nav" data-page="profile"><span class="ico">◎</span> My profile</button>
+  <button class="nav" data-page="settings"><span class="ico">⚙</span> Settings & data</button>
+  <div class="side-bottom"><div class="plus-mini">✦ VYRO PLUS</div>
+    <h3 style="margin:10px 0 6px">Become your next level.</h3>
+    <p>Unlock your personal growth workspace.</p>
+    <button class="btn soft" style="width:100%" data-go="plus">Explore membership ↗</button>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="top-left"><div class="brand-icon" style="width:34px;height:34px;border-radius:11px">V</div>
+    <div><strong style="font:800 16px Manrope;letter-spacing:2px">VYRO</strong>
+    <div class="page-caption top-caption" id="topCaption">YOUR PERSONAL COMMAND CENTRE</div></div>
+  </div>
+  <div class="row" style="justify-content:flex-end">
+    <button class="btn" id="searchBtn" title="Search sections">⌕ <span class="top-caption"> Quick jump</span></button>
+    <div class="avatar" id="avatarTop">V</div>
+  </div>
+</header>
+
+<div class="content">
+<section class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow" id="todayLabel">YOUR NEW CHAPTER STARTS HERE</div>
+      <h1 id="welcomeTitle">Build a life that feels like <span style="color:#c4b5fd">yours.</span></h1>
+      <p>Small promises. Better habits. A stronger you. Your personal space for building a more intentional life, one day at a time.</p>
+      <div class="actions">
+        <button class="btn primary" data-go="routine">Plan my day ↗</button>
+        <button class="btn" data-go="journal">Write a reflection ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head"><div><div class="eyebrow">THE DAILY PULSE</div><h2 style="margin:0">Your progress, at a glance</h2></div><span class="tag" id="dateTag">TODAY</span></div>
+  <div class="grid four">
+    <div class="card"><div class="row"><div class="stat-icon">◷</div><span class="tag">TODAY</span></div><div class="metric" id="taskMetric">0/0</div><div class="metric-label">Routine tasks complete</div><div class="progress"><span id="taskProgress" style="width:0%"></span></div></div>
+    <div class="card"><div class="row"><div class="stat-icon">↗</div><span class="tag">MOVE</span></div><div class="metric" id="fitnessMetric">0 <small style="font-size:13px">min</small></div><div class="metric-label">Activity logged today</div><div class="progress"><span id="fitnessProgress" style="width:0%"></span></div></div>
+    <div class="card"><div class="row"><div class="stat-icon">▤</div><span class="tag">REFLECT</span></div><div class="metric" id="journalMetric">0</div><div class="metric-label">Journal entries saved</div><div class="progress"><span id="journalProgress" style="width:0%"></span></div></div>
+    <div class="card"><div class="row"><div class="stat-icon">♧</div><span class="tag">RESTORE</span></div><div class="metric" id="waterMetric">0/8</div><div class="metric-label">Glasses of water</div><div class="progress"><span id="waterProgress" style="width:0%"></span></div></div>
+  </div>
+
+  <div class="grid two" style="margin-top:18px">
+    <div class="card"><div class="card-title"><div><div class="eyebrow">YOUR INTENTIONS</div><h2>Today's routine</h2></div><button class="btn" data-go="routine">View all ↗</button></div><div id="homeTasks"></div></div>
+    <div class="card"><div class="card-title"><div><div class="eyebrow">MIND SPACE</div><h2>How are you feeling?</h2></div><span class="tag">CHECK IN</span></div>
+      <p class="muted small">Give yourself a moment. There is no right answer.</p>
+      <div class="row" style="gap:7px;flex-wrap:wrap" id="homeMoods">
+        <button class="mood-option" data-mood="Amazing">🤩</button><button class="mood-option" data-mood="Good">🙂</button><button class="mood-option" data-mood="Okay">😐</button><button class="mood-option" data-mood="Low">😔</button><button class="mood-option" data-mood="Stressed">😵‍💫</button>
+      </div><div id="moodStatus" class="muted small" style="margin-top:13px">Your feelings are valid. Take it one step at a time.</div>
+      <div class="divider"></div><div class="row"><div><strong style="font-size:13px">Need to get something out?</strong><div class="muted small" style="margin-top:5px">Your private writing space is here.</div></div><button class="btn soft" data-go="journal">Open journal ↗</button></div>
+    </div>
+  </div>
+
+  <div class="section-head"><div><div class="eyebrow">A MOMENT FOR YOU</div><h2 style="margin:0">Make today count</h2></div></div>
+  <div class="grid three">
+    <div class="card"><div class="feature-icon">✧</div><h3>Mindful minutes</h3><p class="muted small" style="line-height:1.7">Take five minutes away from the noise. Breathe, reset and return with intention.</p><button class="btn" data-go="journal">Reflect now ↗</button></div>
+    <div class="card"><div class="feature-icon">⌁</div><h3>Move with purpose</h3><p class="muted small" style="line-height:1.7">A walk, a stretch or a workout. Your movement is progress, whatever it looks like.</p><button class="btn" data-go="fitness">Log activity ↗</button></div>
+    <div class="card"><div class="feature-icon">◷</div><h3>Keep your promises</h3><p class="muted small" style="line-height:1.7">Choose a few meaningful tasks and make space for the things that matter.</p><button class="btn" data-go="routine">Open routine ↗</button></div>
+  </div>
+</section>
+
+<section class="page" id="page-routine">
+  <div class="eyebrow">INTENTION INTO ACTION</div><h1>Design your day.</h1><p class="muted">Build a routine around the life you want to live.</p>
+  <div class="grid two" style="margin-top:25px;align-items:start">
+    <div class="card"><div class="card-title"><h2>Create a routine task</h2><span class="tag">NEW HABIT</span></div>
+      <form id="taskForm"><div class="form-grid">
+        <div class="field full"><label for="taskName">What do you want to do?</label><input id="taskName" placeholder="e.g. Read for 20 minutes" required maxlength="100"></div>
+        <div class="field"><label for="taskTime">Time</label><input id="taskTime" type="time" value="08:00"></div>
+        <div class="field"><label for="taskCategory">Category</label><select id="taskCategory"><option>Personal growth</option><option>Fitness</option><option>Work & study</option><option>Mindfulness</option><option>Self care</option></select></div>
+      </div><button class="btn primary" style="margin-top:17px">＋ Add to routine</button></form>
+      <div class="divider"></div><h3>Build consistency, not perfection.</h3><p class="muted small" style="line-height:1.7">Start with a few realistic actions. Mark tasks complete as you go. Your list is saved in this browser.</p>
+    </div>
+    <div class="card"><div class="card-title"><h2>Your daily plan</h2><span class="tag" id="routineCount">0 TASKS</span></div><div id="routineList"></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-fitness">
+  <div class="eyebrow">STRENGTH IN EVERY FORM</div><h1>Move your way.</h1><p class="muted">Track your movement, water and recovery habits. Logs are manual, not connected to a wearable.</p>
+  <div class="grid three" style="margin-top:24px">
+    <div class="card"><div class="stat-icon">↗</div><div class="metric" id="fitToday">0 min</div><div class="metric-label">Activity today</div></div>
+    <div class="card"><div class="stat-icon">♧</div><div class="metric" id="fitWater">0 / 8</div><div class="metric-label">Glasses of water</div><div class="actions"><button class="btn soft" id="waterMinus">−</button><button class="btn primary" id="waterPlus">＋ Add glass</button></div></div>
+    <div class="card"><div class="stat-icon">☾</div><div class="metric" id="sleepValue">—</div><div class="metric-label">Last sleep estimate</div><button class="btn" style="margin-top:14px" id="sleepBtn">Log sleep</button></div>
+  </div>
+  <div class="grid two" style="margin-top:18px;align-items:start">
+    <div class="card"><div class="card-title"><h2>Log a movement session</h2><span class="tag">MANUAL LOG</span></div>
+      <form id="fitnessForm"><div class="form-grid">
+        <div class="field full"><label for="fitType">Activity</label><select id="fitType"><option>Walking</option><option>Running</option><option>Strength training</option><option>Cycling</option><option>Yoga</option><option>Stretching</option><option>Dance</option><option>Sports</option><option>Swimming</option><option>Other</option></select></div>
+        <div class="field"><label for="fitMinutes">Duration (minutes)</label><input id="fitMinutes" type="number" min="1" max="1440" placeholder="30" required></div>
+        <div class="field"><label for="fitEffort">Effort</label><select id="fitEffort"><option>Light</option><option selected>Moderate</option><option>Intense</option></select></div>
+        <div class="field full"><label for="fitNotes">Notes (optional)</label><input id="fitNotes" maxlength="160" placeholder="How did it feel?"></div>
+      </div><button class="btn primary" style="margin-top:17px">Save activity ↗</button></form>
+    </div>
+    <div class="card"><div class="card-title"><h2>This week's movement</h2><span class="tag">7 DAYS</span></div><div id="weekChart" class="chart"></div><div class="divider"></div><div class="row"><span class="muted small">Total logged minutes</span><strong id="weekTotal">0 min</strong></div></div>
+  </div>
+  <div class="section-head"><h2 style="margin:0">Recent sessions</h2><button class="btn" id="clearFitness">Clear logs</button></div>
+  <div class="card" id="fitnessHistory"></div>
+  <div class="section-head"><h2 style="margin:0">Movement inspiration</h2></div>
+  <div class="grid three">
+    <div class="card"><div class="feature-icon">☀</div><h3>Gentle reset</h3><p class="muted small">Try a short walk and a few comfortable stretches.</p><button class="btn" data-workout="Walking">Log a walk</button></div>
+    <div class="card"><div class="feature-icon">〰</div><h3>Mindful movement</h3><p class="muted small">Explore beginner-friendly yoga or mobility work at your own pace.</p><button class="btn" data-workout="Yoga">Log yoga</button></div>
+    <div class="card"><div class="feature-icon">↗</div><h3>Build strength</h3><p class="muted small">Choose a strength session appropriate for your ability and experience.</p><button class="btn" data-workout="Strength training">Log strength</button></div>
+  </div>
+</section>
+
+<section class="page" id="page-journal">
+  <div class="eyebrow">YOUR INNER WORLD</div><h1>A space to be yourself.</h1><p class="muted">No audience. No expectations. Just you, your thoughts and a little room to breathe.</p>
+  <div class="grid two" style="margin-top:25px;align-items:start">
+    <div class="card journal-paper">
+      <div class="card-title"><div><div class="eyebrow">THE WRITING ROOM</div><h2 id="editorHeading">A page of your own</h2></div><span class="tag">PRIVATE SPACE</span></div>
+      <form id="journalForm">
+        <div class="field"><label for="journalTitle">Give this moment a title</label><input id="journalTitle" placeholder="A thought worth keeping…" maxlength="100"></div>
+        <div class="field" style="margin-top:14px"><label for="journalBody">What's on your mind?</label><textarea id="journalBody" placeholder="Start wherever you are. You don't need perfect words…" required maxlength="15000"></textarea></div>
+        <div class="row" style="margin-top:7px"><span class="muted small" id="wordCount">0 words</span><span class="muted small" id="saveHint">Saved on this device</span></div>
+        <div class="field" style="margin-top:17px"><label>How are you feeling?</label><div class="row" id="journalMoods" style="justify-content:flex-start;flex-wrap:wrap">
+          <button type="button" class="mood-option" data-jmood="Amazing">🤩</button><button type="button" class="mood-option" data-jmood="Good">🙂</button><button type="button" class="mood-option" data-jmood="Okay">😐</button><button type="button" class="mood-option" data-jmood="Low">😔</button><button type="button" class="mood-option" data-jmood="Stressed">😵‍💫</button>
+        </div></div>
+        <div class="field" style="margin-top:15px"><label for="journalTags">Tags (separate with commas)</label><input id="journalTags" placeholder="growth, gratitude, life"></div>
+        <div class="actions"><button class="btn primary" type="submit" id="saveJournal">Save entry ↗</button><button class="btn" type="button" id="newJournal">New entry</button><button class="btn" type="button" id="exportJournal">Export journal</button></div>
+      </form>
+    </div>
+    <div>
+      <div class="card"><div class="card-title"><div><div class="eyebrow">A LITTLE INSPIRATION</div><h2>Write from here</h2></div><span class="tag">PROMPTS</span></div>
+        <div class="activity"><div class="activity-icon">✧</div><div class="activity-info"><strong>What felt good today?</strong><small>Notice the small things that brought you peace.</small></div><button class="btn prompt" data-prompt="What felt good today?">Use</button></div>
+        <div class="activity"><div class="activity-icon">☾</div><div class="activity-info"><strong>What am I carrying?</strong><small>Name a thought you need space to process.</small></div><button class="btn prompt" data-prompt="What am I carrying today?">Use</button></div>
+        <div class="activity"><div class="activity-icon">↗</div><div class="activity-info"><strong>What do I need?</strong><small>Listen to what your mind and body are asking for.</small></div><button class="btn prompt" data-prompt="What do I need right now?">Use</button></div>
+        <div class="activity"><div class="activity-icon">♡</div><div class="activity-info"><strong>Something I'm grateful for</strong><small>Make room for appreciation without forcing positivity.</small></div><button class="btn prompt" data-prompt="Something I'm grateful for today is…">Use</button></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="eyebrow">YOUR JOURNEY</div><div class="metric" id="journalCount">0</div><div class="metric-label">Entries in your library</div><div class="divider"></div><p class="muted small" style="line-height:1.7">Your journal is stored locally in this browser. Other devices won't see it automatically. Export entries for a separate copy.</p></div>
+    </div>
+  </div>
+  <div class="section-head"><div><div class="eyebrow">YOUR PERSONAL ARCHIVE</div><h2 style="margin:0">Pages you've written</h2></div></div>
+  <input class="search" id="journalSearch" placeholder="⌕  Search titles, thoughts or tags…" style="max-width:430px;margin-bottom:16px">
+  <div class="grid three" id="journalLibrary"></div>
+</section>
+
+<section class="page" id="page-insights">
+  <div class="eyebrow">PROGRESS, NOT PERFECTION</div><h1>Notice your patterns.</h1><p class="muted">A personal snapshot based on the activity you've logged in VYRO.</p>
+  <div class="grid three" style="margin-top:24px">
+    <div class="card"><div class="eyebrow">ROUTINE</div><div class="metric" id="insTask">0%</div><div class="metric-label">Tasks completed today</div><div class="progress"><span id="insTaskBar"></span></div></div>
+    <div class="card"><div class="eyebrow">MOVEMENT</div><div class="metric" id="insMove">0 min</div><div class="metric-label">Activity logged this week</div><div class="progress"><span id="insMoveBar"></span></div></div>
+    <div class="card"><div class="eyebrow">REFLECTION</div><div class="metric" id="insJournal">0</div><div class="metric-label">Journal entries saved</div><div class="progress"><span id="insJournalBar"></span></div></div>
+  </div>
+  <div class="grid two" style="margin-top:18px">
+    <div class="card"><div class="eyebrow">YOUR MOVEMENT</div><h2>Weekly activity</h2><div class="chart" id="insChart"></div></div>
+    <div class="card"><div class="eyebrow">A GENTLE REMINDER</div><h2 id="insightTitle">Your pace is your own.</h2><p id="insightText" class="muted" style="line-height:1.8;font-size:13px">Progress isn't a straight line. Keep showing up in small ways that feel sustainable to you.</p><button class="btn soft" data-go="routine">Set an intention ↗</button></div>
+  </div>
+  <p class="muted small" style="margin-top:18px">Insights are simple summaries of your manual entries, not medical advice, diagnosis or verified health measurements.</p>
+</section>
+
+<section class="page" id="page-plus">
+  <div class="hero plus-hero"><div class="hero-inner"><div class="eyebrow">✦ YOUR NEXT CHAPTER</div><h1>Make space for <span style="color:#c4b5fd">more.</span></h1><p>VYRO Plus is designed for people who want deeper reflection, more personal structure and a richer growth experience.</p><div class="actions"><span class="tag">MEMBERSHIP CONCEPT</span></div></div></div>
+  <div class="grid three" style="margin-top:20px">
+    <div class="card"><div class="feature-icon">✧</div><h3>Deeper insights</h3><p class="muted small" style="line-height:1.8">A future premium layer for meaningful summaries of your habits and reflections.</p></div>
+    <div class="card"><div class="feature-icon">◈</div><h3>Personalised plans</h3><p class="muted small" style="line-height:1.8">Build flexible routines around your goals, schedule and preferences.</p></div>
+    <div class="card"><div class="feature-icon">▤</div><h3>Expanded journal</h3><p class="muted small" style="line-height:1.8">Explore guided writing, reflection prompts and longer-term personal reviews.</p></div>
+  </div>
+  <div class="card" style="margin-top:18px;text-align:center;padding:36px 22px">
+    <div class="eyebrow">VYRO PLUS</div><h2 style="font-size:26px">Your growth deserves intention.</h2>
+    <div style="font:800 48px Manrope;margin:15px 0">₹49<span style="font:400 14px 'DM Sans';color:var(--muted)"> / month</span></div>
+    <p class="muted small">Proposed pricing · No payment will be taken in this prototype.</p>
+    <div style="max-width:310px;margin:20px auto;text-align:left;line-height:2.5;font-size:13px">
+      <div><span class="check">✦</span> Advanced reflection experience</div><div><span class="check">✦</span> Personal growth planning concept</div><div><span class="check">✦</span> Premium visual themes concept</div><div><span class="check">✦</span> Future progress review tools</div>
+    </div>
+    <button class="btn primary" id="plusBtn">Explore Plus</button><p class="muted small" style="margin:15px 0 0">Real subscriptions, premium access controls and billing still need to be connected.</p>
+  </div>
+</section>
+
+<section class="page" id="page-profile">
+  <div class="eyebrow">THE PERSON BEHIND THE PROGRESS</div><h1>Your profile.</h1><p class="muted">Make your personal space feel like yours.</p>
+  <div class="card" style="max-width:650px;margin-top:25px">
+    <div class="row" style="justify-content:flex-start;margin-bottom:22px"><div class="avatar" style="width:65px;height:65px;font-size:25px" id="profileAvatar">V</div><div><h2 style="margin-bottom:5px" id="profileDisplay">Your VYRO profile</h2><div class="muted small">Your personal workspace</div></div></div>
+    <form id="profileForm"><div class="form-grid">
+      <div class="field full"><label for="profileName">Your name</label><input id="profileName" maxlength="60" placeholder="What should we call you?"></div>
+      <div class="field"><label for="profileAge">Age (optional)</label><input id="profileAge" type="number" min="13" max="120" placeholder="Age"></div>
+      <div class="field"><label for="profileGoal">Main focus</label><select id="profileGoal"><option>Balanced life</option><option>Fitness & energy</option><option>Personal growth</option><option>Mindfulness</option><option>Study & productivity</option></select></div>
+    </div><button class="btn primary" style="margin-top:18px">Save profile</button></form>
+  </div>
+</section>
+
+<section class="page" id="page-settings">
+  <div class="eyebrow">YOUR DATA, YOUR CHOICE</div><h1>Settings & data.</h1><p class="muted">Manage your local VYRO data and keep your own backup.</p>
+  <div class="grid two" style="margin-top:25px">
+    <div class="card"><div class="feature-icon">⇧</div><h2>Export a backup</h2><p class="muted small" style="line-height:1.8">Download your profile, routine tasks, fitness logs, journal entries and settings as a JSON file.</p><button class="btn primary" id="backupBtn">Export full backup ↗</button></div>
+    <div class="card"><div class="feature-icon">⇩</div><h2>Restore a backup</h2><p class="muted small" style="line-height:1.8">Restore a previously exported VYRO JSON backup. This replaces the corresponding local app data.</p><input type="file" id="restoreFile" accept=".json,application/json" style="max-width:100%;font-size:12px;margin-top:8px"></div>
+    <div class="card"><div class="feature-icon">◉</div><h2>Privacy overview</h2><p class="muted small" style="line-height:1.8">This prototype stores entries in your browser's local storage. That is not encrypted cloud storage and does not sync automatically.</p><span class="tag">LOCAL STORAGE</span></div>
+    <div class="card"><div class="feature-icon">⌁</div><h2>Reset this app</h2><p class="muted small" style="line-height:1.8">Permanently clear the VYRO data saved in this browser. Export a backup first if you want to keep it.</p><button class="btn danger" id="resetBtn">Clear all local data</button></div>
+  </div>
+</section>
+</div>
+</main>
+</div>
+
+<nav class="bottom-nav">
+<button class="active" data-page="home"><span>◈</span>Home</button>
+<button data-page="routine"><span>◷</span>Routine</button>
+<button data-page="fitness"><span>↗</span>Fitness</button>
+<button data-page="journal"><span>▤</span>Journal</button>
+<button data-page="insights"><span>⌁</span>Insights</button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="searchModal"><div class="modal"><div class="row"><h2>Quick jump</h2><button class="btn" id="closeSearch">✕</button></div><p class="muted small">Find a section in your VYRO workspace.</p><input class="search" id="jumpSearch" placeholder="Search routine, journal, fitness…"><div id="jumpResults" style="margin-top:14px"></div></div></div>
+
+<script>
+(() => {
+'use strict';
+const KEY='vyro.advanced.v1';
+const today=()=>new Date().toISOString().slice(0,10);
+const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const defaults=()=>({profile:{name:'',age:'',goal:'Balanced life'},tasks:[],fitness:[],journal:[],water:{},sleep:{},moods:{},settings:{}});
+let data;
+try{data={...defaults(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}
+catch(e){data=defaults()}
+data.profile={...defaults().profile,...(data.profile||{})};
+['tasks','fitness','journal'].forEach(k=>{if(!Array.isArray(data[k]))data[k]=[]});
+data.water=data.water||{};data.sleep=data.sleep||{};data.moods=data.moods||{};
+let editingJournal=null,journalMood='',toastTimer;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateLabel=d=>new Date(d+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){notify('Storage is full. Export a backup and remove older data.');return false}};
+function notify(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+function go(page){if(page==='plus'){}document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const names={home:'YOUR PERSONAL COMMAND CENTRE',routine:'YOUR DAILY ROUTINE',fitness:'MOVEMENT & WELLBEING',journal:'YOUR PRIVATE WRITING SPACE',insights:'YOUR PERSONAL PROGRESS',plus:'VYRO PLUS',profile:'YOUR PROFILE',settings:'SETTINGS & DATA'};$('topCaption').textContent=names[page]||'VYRO';window.scrollTo({top:0,behavior:'smooth'});if(page==='insights')renderInsights();if(page==='journal')renderJournal()}
+document.addEventListener('click',e=>{
+ const nav=e.target.closest('[data-page]');if(nav){go(nav.dataset.page);return}
+ const jump=e.target.closest('[data-go]');if(jump){go(jump.dataset.go);return}
+});
+function dayTasks(){return data.tasks.filter(t=>t.date===today())}
+function todayFitness(){return data.fitness.filter(f=>f.date===today())}
+function waterCount(){return Number(data.water[today()]||0)}
+function renderHome(){
+ const tasks=dayTasks(),done=tasks.filter(t=>t.done).length;
+ const minutes=todayFitness().reduce((s,f)=>s+Number(f.minutes||0),0);
+ $('taskMetric').textContent=done+'/'+tasks.length;$('taskProgress').style.width=(tasks.length?done/tasks.length*100:0)+'%';
+ $('fitnessMetric').innerHTML=minutes+' <small style="font-size:13px">min</small>';$('fitnessProgress').style.width=Math.min(100,minutes/30*100)+'%';
+ $('journalMetric').textContent=data.journal.length;$('journalProgress').style.width=Math.min(100,data.journal.length/7*100)+'%';
+ $('waterMetric').textContent=waterCount()+'/8';$('waterProgress').style.width=Math.min(100,waterCount()/8*100)+'%';
+ $('todayLabel').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}).toUpperCase();
+ $('dateTag').textContent=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric'}).toUpperCase();
+ $('welcomeTitle').innerHTML=(data.profile.name?'Welcome back, '+esc(data.profile.name)+'.':'Build a life that feels like')+' <span style="color:#c4b5fd">'+(data.profile.name?'let’s make today yours':'yours.')+'</span>';
+ $('avatarTop').textContent=(data.profile.name||'V').trim().charAt(0).toUpperCase();
+ $('homeTasks').innerHTML=tasks.length?tasks.slice(0,5).map(t=>`<div class="activity"><button class="mood-option" data-toggle="${t.id}" aria-label="Toggle task">${t.done?'✓':'○'}</button><div class="activity-info"><strong style="${t.done?'text-decoration:line-through;color:#817a94':''}">${esc(t.name)}</strong><small>${esc(t.time||'Anytime')} · ${esc(t.category)}</small></div></div>`).join(''):'<div class="empty"><div class="big">◷</div>No tasks planned yet.<br><button class="btn soft" data-go="routine" style="margin-top:13px">Create your first task</button></div>';
+ const mood=data.moods[today()];$('moodStatus').textContent=mood?'Today you’re feeling: '+mood+'. Thanks for checking in.':'A small check-in can help you notice how you feel.';
+ document.querySelectorAll('[data-mood]').forEach(b=>b.classList.toggle('selected',b.dataset.mood===mood));
+}
+function renderTasks(){
+ const tasks=dayTasks();$('routineCount').textContent=tasks.length+' TASKS';
+ $('routineList').innerHTML=tasks.length?tasks.slice().sort((a,b)=>(a.time||'').localeCompare(b.time||'')).map(t=>`<div class="activity"><button class="mood-option" data-toggle="${t.id}">${t.done?'✓':'○'}</button><div class="activity-info"><strong style="${t.done?'text-decoration:line-through;color:#817a94':''}">${esc(t.name)}</strong><small>${esc(t.time||'Anytime')} · ${esc(t.category)}</small></div><button class="btn danger" data-delete-task="${t.id}" aria-label="Delete task">×</button></div>`).join(''):'<div class="empty"><div class="big">✧</div>Your day is a blank page.<br>Add a task to begin.</div>';
+}
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();const name=$('taskName').value.trim();if(!name)return;data.tasks.push({id:makeId(),name,time:$('taskTime').value,category:$('taskCategory').value,date:today(),done:false});save();$('taskName').value='';renderAll();notify('Task added to your routine.')});
+document.addEventListener('click',e=>{
+ const toggle=e.target.closest('[data-toggle]');if(toggle){const t=data.tasks.find(x=>x.id===toggle.dataset.toggle);if(t){t.done=!t.done;save();renderAll()}return}
+ const del=e.target.closest('[data-delete-task]');if(del){data.tasks=data.tasks.filter(t=>t.id!==del.dataset.deleteTask);save();renderAll();notify('Task removed.')}
+ const mood=e.target.closest('[data-mood]');if(mood){data.moods[today()]=mood.dataset.mood;save();renderHome();notify('Check-in saved.')}
+ const jm=e.target.closest('[data-jmood]');if(jm){journalMood=jm.dataset.jmood;document.querySelectorAll('[data-jmood]').forEach(b=>b.classList.toggle('selected',b.dataset.jmood===journalMood))}
+ const prompt=e.target.closest('[data-prompt]');if(prompt){$('journalBody').value=prompt.dataset.prompt+'\n\n';updateWordCount();$('journalBody').focus();$('journalTitle').value='A moment to reflect';}
+ const workout=e.target.closest('[data-workout]');if(workout){go('fitness');$('fitType').value=workout.dataset.workout;$('fitMinutes').focus()}
+});
+function renderFitness(){
+ const minutes=todayFitness().reduce((s,f)=>s+Number(f.minutes||0),0);
+ $('fitToday').textContent=minutes+' min';$('fitWater').textContent=waterCount()+' / 8';
+ $('sleepValue').textContent=data.sleep[today()]?data.sleep[today()]+' h':'—';
+ const history=data.fitness.slice().sort((a,b)=>(b.created||'').localeCompare(a.created||''));
+ $('fitnessHistory').innerHTML=history.length?history.slice(0,25).map(f=>`<div class="activity"><div class="activity-icon">${({Walking:'☀',Running:'↗','Strength training':'⬡',Yoga:'〰',Cycling:'🚲',Swimming:'≈'})[f.type]||'✧'}</div><div class="activity-info"><strong>${esc(f.type)} · ${Number(f.minutes)} min</strong><small>${dateLabel(f.date)} · ${esc(f.effort)}${f.notes?' · '+esc(f.notes):''}</small></div><button class="btn danger" data-delete-fit="${f.id}">×</button></div>`).join(''):'<div class="empty">No sessions yet. Every movement counts.</div>';
+ renderChart($('weekChart'));renderChart($('insChart'));const week=weekDays();const total=data.fitness.filter(f=>week.some(d=>d.key===f.date)).reduce((s,f)=>s+Number(f.minutes||0),0);$('weekTotal').textContent=total+' min';
+}
+function weekDays(){const arr=[];for(let i=6;i>=0;i--){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-i);arr.push({key:d.toISOString().slice(0,10),label:d.toLocaleDateString(undefined,{weekday:'short'})})}return arr}
+function renderChart(el){if(!el)return;const days=weekDays();const vals=days.map(d=>data.fitness.filter(f=>f.date===d.key).reduce((s,f)=>s+Number(f.minutes||0),0));const max=Math.max(30,...vals);el.innerHTML=days.map((d,i)=>`<div class="bar-wrap" title="${vals[i]} minutes"><div class="bar" style="height:${Math.max(3,vals[i]/max*100)}%"></div><span class="bar-label">${d.label}</span></div>`).join('')}
+$('fitnessForm').addEventListener('submit',e=>{e.preventDefault();const minutes=Number($('fitMinutes').value);if(!Number.isFinite(minutes)||minutes<1||minutes>1440){notify('Enter a duration between 1 and 1440 minutes.');return}data.fitness.push({id:makeId(),type:$('fitType').value,minutes,effort:$('fitEffort').value,notes:$('fitNotes').value.trim(),date:today(),created:new Date().toISOString()});save();$('fitMinutes').value='';$('fitNotes').value='';renderAll();notify('Activity saved.')});
+document.addEventListener('click',e=>{const del=e.target.closest('[data-delete-fit]');if(del){data.fitness=data.fitness.filter(f=>f.id!==del.dataset.deleteFit);save();renderAll();notify('Activity removed.')}});
+$('waterPlus').addEventListener('click',()=>{data.water[today()]=Math.min(30,waterCount()+1);save();renderAll()});
+$('waterMinus').addEventListener('click',()=>{data.water[today()]=Math.max(0,waterCount()-1);save();renderAll()});
+$('sleepBtn').addEventListener('click',()=>{const val=prompt('How many hours did you sleep? Enter 0–24.');if(val===null)return;const n=Number(val);if(val.trim()===''||!Number.isFinite(n)||n<0||n>24){notify('Enter a number between 0 and 24.');return}data.sleep[today()]=n;save();renderAll();notify('Sleep estimate saved.')});
+$('clearFitness').addEventListener('click',()=>{if(confirm('Delete all activity logs? This cannot be undone.')){data.fitness=[];save();renderAll();notify('Activity logs cleared.')}});
+function updateWordCount(){const s=$('journalBody').value.trim();const n=s?s.split(/\s+/).length:0;$('wordCount').textContent=n+' word'+(n===1?'':'s')}
+$('journalBody').addEventListener('input',updateWordCount);
+function resetEditor(){editingJournal=null;journalMood='';$('journalForm').reset();$('editorHeading').textContent='A page of your own';$('saveJournal').textContent='Save entry ↗';$('wordCount').textContent='0 words';document.querySelectorAll('[data-jmood]').forEach(b=>b.classList.remove('selected'))}
+$('newJournal').addEventListener('click',resetEditor);
+$('journalForm').addEventListener('submit',e=>{e.preventDefault();const body=$('journalBody').value.trim();if(!body){notify('Write a little something before saving.');return}const existing=data.journal.find(j=>j.id===editingJournal);const entry={id:editingJournal||makeId(),title:$('journalTitle').value.trim()||'Untitled reflection',body,mood:journalMood,tags:$('journalTags').value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,12),date:existing?.date||today(),updated:new Date().toISOString()};if(existing){data.journal=data.journal.map(j=>j.id===editingJournal?entry:j)}else data.journal.unshift(entry);if(save()){renderAll();resetEditor();notify('Your journal entry is saved on this device.')}});
+function renderJournal(){
+ $('journalCount').textContent=data.journal.length;
+ const q=($('journalSearch').value||'').toLowerCase();
+ const entries=data.journal.filter(j=>(j.title+' '+j.body+' '+(j.tags||[]).join(' ')).toLowerCase().includes(q));
+ $('journalLibrary').innerHTML=entries.length?entries.map(j=>`<article class="card entry-card"><div class="row"><span class="tag">${dateLabel(j.date)}</span><span class="mood">${({Amazing:'🤩',Good:'🙂',Okay:'😐',Low:'😔',Stressed:'😵‍💫'})[j.mood]||'✧'}</span></div><h3 style="margin-top:16px">${esc(j.title)}</h3><p class="entry-preview">${esc(j.body.slice(0,180))}${j.body.length>180?'…':''}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin:12px 0">${(j.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div><div class="row"><button class="btn soft" data-edit-journal="${j.id}">Edit entry</button><button class="btn danger" data-delete-journal="${j.id}">Delete</button></div></article>`).join(''):'<div class="card empty"><div class="big">▤</div>No entries match yet. Your story starts with one sentence.</div>';
+}
+$('journalSearch').addEventListener('input',renderJournal);
+document.addEventListener('click',e=>{
+ const edit=e.target.closest('[data-edit-journal]');if(edit){const j=data.journal.find(x=>x.id===edit.dataset.editJournal);if(!j)return;editingJournal=j.id;journalMood=j.mood||'';$('journalTitle').value=j.title;$('journalBody').value=j.body;$('journalTags').value=(j.tags||[]).join(', ');$('editorHeading').textContent='Edit your reflection';$('saveJournal').textContent='Update entry ↗';document.querySelectorAll('[data-jmood]').forEach(b=>b.classList.toggle('selected',b.dataset.jmood===journalMood));updateWordCount();window.scrollTo({top:0,behavior:'smooth'});return}
+ const del=e.target.closest('[data-delete-journal]');if(del&&confirm('Delete this journal entry?')){data.journal=data.journal.filter(j=>j.id!==del.dataset.deleteJournal);save();renderAll();notify('Entry deleted.')}
+});
+$('exportJournal').addEventListener('click',()=>download('vyro-journal.txt',data.journal.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(j=>`${j.title}\n${j.date}${j.mood?' · '+j.mood:''}\n${(j.tags||[]).join(', ')}\n\n${j.body}\n\n${'—'.repeat(28)}\n`).join('\n'),'text/plain;charset=utf-8'));
+function renderInsights(){
+ const tasks=dayTasks(),done=tasks.filter(t=>t.done).length,pct=tasks.length?Math.round(done/tasks.length*100):0;
+ const total=data.fitness.filter(f=>weekDays().some(d=>d.key===f.date)).reduce((s,f)=>s+Number(f.minutes||0),0);
+ $('insTask').textContent=pct+'%';$('insTaskBar').style.width=pct+'%';$('insMove').textContent=total+' min';$('insMoveBar').style.width=Math.min(100,total/150*100)+'%';$('insJournal').textContent=data.journal.length;$('insJournalBar').style.width=Math.min(100,data.journal.length/7*100)+'%';
+ renderChart($('insChart'));
+ $('insightTitle').textContent=tasks.length&&done===tasks.length?'You showed up for yourself.':total>0?'Every bit of movement counts.':data.journal.length?'Keep making space to reflect.':'Your pace is your own.';
+ $('insightText').textContent=tasks.length&&done===tasks.length?'You completed the tasks you planned today. Celebrate that, and leave room for rest.':total>0?'You have logged '+total+' minutes of movement this week. Notice how different kinds of movement make you feel.':data.journal.length?'You have created space to put your thoughts into words. Reflection can help you notice patterns over time.':'Start with one small action you can realistically manage today. Your progress does not need to look like anyone else’s.';
+}
+$('profileForm').addEventListener('submit',e=>{e.preventDefault();data.profile.name=$('profileName').value.trim();data.profile.age=$('profileAge').value;data.profile.goal=$('profileGoal').value;save();renderAll();notify('Profile updated.')});
+function renderProfile(){$('profileName').value=data.profile.name||'';$('profileAge').value=data.profile.age||'';$('profileGoal').value=data.profile.goal||'Balanced life';$('profileDisplay').textContent=data.profile.name||'Your VYRO profile';$('profileAvatar').textContent=(data.profile.name||'V').trim().charAt(0).toUpperCase()}
+function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('backupBtn').addEventListener('click',()=>download('vyro-backup-'+today()+'.json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),data},null,2),'application/json'));
+$('restoreFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const parsed=JSON.parse(await file.text());const restored=parsed.data||parsed;if(!Array.isArray(restored.tasks)||!Array.isArray(restored.fitness)||!Array.isArray(restored.journal)||!restored.profile)throw new Error('Invalid backup');if(!confirm('Restore this backup? It will replace your current VYRO data.'))return;data={...defaults(),...restored};save();renderAll();notify('Backup restored.')}catch(err){notify('That file does not look like a valid VYRO backup.')}finally{e.target.value=''}});
+$('resetBtn').addEventListener('click',()=>{if(confirm('Permanently delete all VYRO data saved in this browser? Export a backup first if needed.')){data=defaults();save();resetEditor();renderAll();notify('Local data cleared.')}});
+$('plusBtn').addEventListener('click',()=>notify('Membership is a concept only; payments are not connected.'));
+$('searchBtn').addEventListener('click',openSearch);$('closeSearch').addEventListener('click',closeSearch);
+$('searchModal').addEventListener('click',e=>{if(e.target.id==='searchModal')closeSearch()});
+const pages=[['home','Overview'],['routine','Daily routine'],['fitness','Fitness & health'],['journal','My journal'],['insights','Insights'],['plus','VYRO Plus'],['profile','My profile'],['settings','Settings & data']];
+function openSearch(){$('searchModal').classList.add('show');$('jumpSearch').value='';renderJump('');$('jumpSearch').focus()}
+function closeSearch(){$('searchModal').classList.remove('show')}
+function renderJump(q){const list=pages.filter(p=>p[1].toLowerCase().includes(q.toLowerCase()));$('jumpResults').innerHTML=list.map(p=>`<button class="nav" style="width:100%" data-jump="${p[0]}"><span class="ico">↗</span>${p[1]}</button>`).join('')||'<p class="muted small">No matching sections.</p>'}
+$('jumpSearch').addEventListener('input',e=>renderJump(e.target.value));
+$('jumpResults').addEventListener('click',e=>{const b=e.target.closest('[data-jump]');if(b){go(b.dataset.jump);closeSearch()}});
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape')closeSearch()});
+function renderAll(){renderHome();renderTasks();renderFitness();renderJournal();renderInsights();renderProfile()}
+renderAll();
+})();
+</script>
+</body>
+</html>
+```
